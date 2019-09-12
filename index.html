@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        .intro {
+            padding: 80px 20px;
+            background: #cecece;
+        }
+        .sticky-wrap {
+            background: black;
+            height: 300vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            /* justify-content: flex-end;
+
+            align-items: flex-end; */
+        }
+
+        .sticky-container {
+            padding: 5px;
+            background: pink;
+            width: 1280px;
+            max-width: 1280px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .sticky-container.sticky {
+            position: fixed;
+            top: 100px;
+        }
+
+        .sticky-container.before {
+            
+        }
+
+        .sticky-container.after {
+            margin-top: auto;
+        }
+
+        .gallery {
+            height: 800px;
+            width: 100%;
+            position: relative;
+            background: #a0a0a0;
+        }
+
+        .gallery-item {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+        }
+
+        .left {
+            width: 50%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .right {
+            width: 50%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translate3d(0, -50px, 0);
+            transition: all .5s;
+        }
+
+        .gallery-item.active {
+            opacity: 1;
+        }
+
+        .gallery-item.active .right {
+            transform: translate3d(0,0,0);
+            opacity: 1;
+        }
+
+        .gallery-item.leave .right {
+            animation-name: leave;
+            animation-duration: .5s;
+            animation-iteration-count: 1;
+        }
+
+        .gallery-item--1 {
+            background: red;
+        }
+
+        .gallery-item--2 {
+            background: blue;
+        }
+
+        .gallery-item--3 {
+            background: green;
+        }
+
+        @keyframes enter {
+            0% {
+                transform: translate3d(0, -50px, 0);
+                opacity: 0;
+            }
+            100% {
+                transform: translate3d(0, 0, 0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes leave {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(.7);
+            }
+        }
+
+
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+    <div class="intro">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+    </div>
+
+    <div class="sticky-wrap">
+        <div class="sticky-container before">
+            <div class="gallery">
+                <div class="gallery-item gallery-item--1 active">
+                    <div class="left">
+                        This is an image
+                    </div>
+                    <div class="right">
+                        this is for my beautiful text animation
+                        This is part 1
+                    </div>
+                </div>
+                <div class="gallery-item gallery-item--2">
+                        <div class="left">
+                                This is an image
+                            </div>
+                            <div class="right">
+                                this is for my beautiful text animation
+                                This is part 2
+                            </div>
+                    </div>
+                    <div class="gallery-item gallery-item--3">
+                            <div class="left">
+                                    This is an image
+                                </div>
+                                <div class="right">
+                                    this is for my beautiful text animation
+                                    This is part 3
+                                </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="intro">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+    </div>
+</div>
+
+<script>
+
+    let gallery = document.querySelector(".gallery")
+    let stickyContainer = document.querySelector(".sticky-container")
+    let stickyWrap = document.querySelector(".sticky-wrap")
+
+    let totalHeight = stickyWrap.getBoundingClientRect().height;
+
+    let galleryHeight = gallery.getBoundingClientRect().height;
+
+    let galleryItems = gallery.querySelectorAll(".gallery-item");
+
+    let breakpoints = [0, 33, 66, 100]
+
+    let currentSlide = 0;
+
+
+    window.addEventListener("scroll", () => {
+        let scrollPos = -1 * (stickyWrap.getBoundingClientRect().top - 100);
+
+        let scrollProg = scrollPos / (totalHeight - galleryHeight) * 100
+
+        if (scrollProg < 0) {
+            stickyContainer.classList.remove("sticky")
+            stickyContainer.classList.add("before")
+        } else if (scrollProg > 100) {
+            stickyContainer.classList.remove("sticky")
+            stickyContainer.classList.add("after")
+        } else if (scrollProg >= 0 && scrollProg < 100) {
+            stickyContainer.classList.remove("before")
+            stickyContainer.classList.remove("after")
+            stickyContainer.classList.add("sticky")
+        } 
+
+
+        if (scrollProg < breakpoints[1]) {
+            if (currentSlide != 0) {
+                galleryItems[currentSlide].classList.add("leave");
+                    galleryItems[currentSlide].addEventListener("animationend", (e) => {
+                    galleryItems[currentSlide].classList.remove("active");
+                    galleryItems[currentSlide].classList.remove("leave");
+                    galleryItems[0].classList.add('active');
+                    clearActives(0);
+                    currentSlide = 0;
+                }, {once: true})
+            }
+            // galleryItems[0].classList.add("active")
+            // clearActives(0)
+        } else if (scrollProg < breakpoints[2]) {
+            if (currentSlide != 1) {
+                galleryItems[currentSlide].classList.add("leave");
+                    galleryItems[currentSlide].addEventListener("animationend", (e) => {
+                    galleryItems[currentSlide].classList.remove("active");
+                    galleryItems[currentSlide].classList.remove("leave");
+                    galleryItems[1].classList.add('active');
+                    clearActives(1);
+                    currentSlide = 1;
+                }, {once: true})
+            }           
+        } else {
+            if (currentSlide != 2) {
+                galleryItems[currentSlide].classList.add("leave");
+                    galleryItems[currentSlide].addEventListener("animationend", (e) => {
+                    galleryItems[currentSlide].classList.remove("active");
+                    galleryItems[currentSlide].classList.remove("leave");
+                    galleryItems[2].classList.add('active');
+                    clearActives(2);
+                    currentSlide = 2;
+                }, {once: true})
+            }
+        }
+    })
+
+    function clearActives(dontRemove) {
+        galleryItems.forEach((el, i) => {
+            if (i == dontRemove) {
+                return
+            }
+            el.classList.remove("active")
+        })
+    }
+
+
+</script>
+
+
+</body>
+</html>
